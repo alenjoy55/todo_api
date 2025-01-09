@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import axios from 'axios'
 function List(){
     const [data,setData]=useState([])
+    const [formData,setFormData]=useState({task:'',description:''})
     const [editing,setEditing] = useState(false)
     const [editdata,setEditData] = useState(null)
     useEffect(()=>{
@@ -14,6 +15,21 @@ function List(){
         setEditing(true)
         setEditData(task)
     }
+    const handleChange = (e)=>{
+        // console.log(e.target);
+        const {task,value}=e.target
+        setFormData((prv)=>({...prv,[task]:value}))
+        // console.log(formData);
+        
+      }
+      const handleSubmit = (e)=>{
+        e.preventDefault()
+        setData((prv)=>[...prv,formData])
+        setFormData({task:'',description:''})
+        // console.log(data);
+        
+      }
+    
     return(
         <div className="container">
             <h1>Display Details</h1>
@@ -42,9 +58,9 @@ function List(){
 const EditForm =({curTask})=>{
     const [task,setTask] = useState(curTask)
     return(
-        <form>
-            <input type="text" name="title" id="title" value={task.task} />
-            <input type="text" name="description" id="description" value={task.description}/>
+        <form onSubmit={handleSubmit}>
+            <input type="text" name="title" id="title" value={task.task}  onChange={handleChange}/>
+            <input type="text" name="description" id="description" value={task.description} onChange={handleChange}/>
             <input type="submit" value="Update" />
         </form>
     )
